@@ -1,0 +1,10 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #eef2f7;
+  margin: 0;
+  padding: 0;
+}
+
+.MuiPaper-root {
+  border-radius: 10px !important;
+}
