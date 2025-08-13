@@ -1,115 +1,136 @@
-// src/components/UserList.jsx
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
   TableHead,
   TableRow,
+  TableCell,
+  TableBody,
   IconButton,
-  Paper,
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  useMediaQuery,
+  TextField
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import { Edit, Delete, Save, Close } from "@mui/icons-material";
 
+export default function UserList({ users, editUser, deleteUser, isArchive = false }) {
+  const [editId, setEditId] = useState(null);
+  const [editData, setEditData] = useState({
+    name: "",
+    surname: "",
+    phone: "",
+    amount: ""
+  });
 
-// UserList ekranni responsive qiladi — mobil va desktop dizayn farqli.
-// Har ikki holatda foydalanuvchini o‘chirish yoki tahrirlash mumkin.
-// Ma’lumot bo‘lmasa foydalanuvchiga bu haqda yoziladi.
+  const handleEdit = (user) => {
+    setEditId(user.id);
+    setEditData({
+      name: user.name,
+      surname: user.surname,
+      phone: user.phone,
+      amount: user.amount
+    });
+  };
 
-export default function UserList({ users, deleteUser, startEditUser }) {
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const handleSave = (id) => {
+    editUser(id, {
+      name: editData.name,
+      surname: editData.surname,
+      phone: editData.phone,
+      amount: parseFloat(editData.amount)
+    });
+    setEditId(null);
+  };
 
-  if (isMobile) {
-    // 📱 Mobile ko‘rinishi
-    return (
-      <Box display="flex" flexDirection="column" gap={2}>
-        {users.length > 0 ? (
-          users.map((user) => (
-            <Card key={user.id}>
-              <CardContent>
-                <Typography variant="h6">
-                  {user.firstName} {user.lastName}
-                </Typography>
-                <Typography variant="body2">📞 {user.phone}</Typography>
-                <Typography variant="body2">💰 {user.debt} so'm</Typography>
-
-                <Box mt={1}>
-                  <IconButton
-                    color="primary"
-                    onClick={() => startEditUser(user)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    color="error"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <Typography align="center">Ma’lumot yo‘q</Typography>
-        )}
-      </Box>
-    );
-  }
-
-  // 💻 Desktop ko‘rinishi (jadval)
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Ism</TableCell>
-            <TableCell>Familiya</TableCell>
-            <TableCell>Telefon</TableCell>
-            <TableCell>Qarz</TableCell>
-            <TableCell align="center">Amallar</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.length > 0 ? (
-            users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.firstName}</TableCell>
-                <TableCell>{user.lastName}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.debt} so'm</TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    color="primary"
-                    onClick={() => startEditUser(user)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    color="error"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={5} align="center">
-                Ma’lumot yo‘q
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Ism</TableCell>
+          <TableCell>Familiya</TableCell>
+          <TableCell>Telefon</TableCell>
+          <TableCell>Qarz summasi</TableCell>
+          <TableCell>Sana</TableCell>
+          {!isArchive && <TableCell>Amallar</TableCell>}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {users.map((user) => (
+          <TableRow key={user.id}>
+            <TableCell>
+              {editId === user.id ? (
+                <TextField
+                  value={editData.name}
+                  onChange={(e) =>
+                    setEditData({ ...editData, name: e.target.value })
+                  }
+                />
+              ) : (
+                user.name
+              )}
+            </TableCell>
+            <TableCell>
+              {editId === user.id ? (
+                <TextField
+                  value={editData.surname}
+                  onChange={(e) =>
+                    setEditData({ ...editData, surname: e.target.value })
+                  }
+                />
+              ) : (
+                user.surname
+              )}
+            </TableCell>
+            <TableCell>
+              {editId === user.id ? (
+                <TextField
+                  value={editData.phone}
+                  onChange={(e) =>
+                    setEditData({ ...editData, phone: e.target.value })
+                  }
+                />
+              ) : (
+                user.phone
+              )}
+            </TableCell>
+            <TableCell>
+              {editId === user.id ? (
+                <TextField
+                  type="number"
+                  value={editData.amount}
+                  onChange={(e) =>
+                    setEditData({ ...editData, amount: e.target.value })
+                  }
+                />
+              ) : (
+                `${user.amount} so‘m`
+              )}
+            </TableCell>
+            <TableCell>{user.date}</TableCell>
+
+            {!isArchive && (
+              <TableCell>
+                {editId === user.id ? (
+                  <>
+                    <IconButton onClick={() => handleSave(user.id)} color="success">
+                      <Save />
+                    </IconButton>
+                    <IconButton onClick={() => setEditId(null)} color="error">
+                      <Close />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <IconButton onClick={() => handleEdit(user)} color="primary">
+                      <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => deleteUser(user.id)} color="error">
+                      <Delete />
+                    </IconButton>
+                  </>
+                )}
               </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            )}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
