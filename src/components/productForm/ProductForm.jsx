@@ -59,7 +59,7 @@ export default function ProductForm({ addProduct, editingProduct, saveProduct })
         required
       />
       <Button type="submit" variant="contained">
-        {editingProduct ? "Saqlash" : "Qo‘shish"}
+        {editingProduct ? "Saqlash" : "Qo'shish"}
       </Button>
     </Box>
   );
