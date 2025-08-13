@@ -9,4 +9,6 @@ export default function SearchBar({ setSearchTerm }) {
       fullWidth
     />
   );
+  // Natija: Foydalanuvchi yozgan so‘z state’ga o‘tadi va keyinchalik filtering yoki qidiruv uchun ishlatiladi.
+
 }

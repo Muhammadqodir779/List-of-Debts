@@ -18,6 +18,11 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
+
+// UserList ekranni responsive qiladi — mobil va desktop dizayn farqli.
+// Har ikki holatda foydalanuvchini o‘chirish yoki tahrirlash mumkin.
+// Ma’lumot bo‘lmasa foydalanuvchiga bu haqda yoziladi.
+
 export default function UserList({ users, deleteUser, startEditUser }) {
   const isMobile = useMediaQuery("(max-width:768px)");
 
