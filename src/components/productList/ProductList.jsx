@@ -44,7 +44,7 @@ export default function ProductList({ products, editProduct, deleteProduct }) {
                     variant="outlined"
                     size="small"
                     sx={{ mr: 1 }}
-                    onClick={() => editProduct(product.id)}
+                    onClick={() => editProduct(product)}
                   >
                     Tahrirlash
                   </Button>

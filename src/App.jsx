@@ -13,6 +13,7 @@ export default function App() {
   const [archive, setArchive] = useState([]);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState("qarzdorlar");
+  const [editingProduct, setEditingProduct] = useState(null);
 
   // localStorage'dan ma'lumotlarni olish
   useEffect(() => {
@@ -25,26 +26,14 @@ export default function App() {
     setProducts(savedProducts);
   }, []);
 
-  // Ma'lumotlar o'zgarganda localStorage'ga yozish
-  useEffect(() => {
-    localStorage.setItem("users", JSON.stringify(users));
-  }, [users]);
-
-  useEffect(() => {
-    localStorage.setItem("archive", JSON.stringify(archive));
-  }, [archive]);
-
-  useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
-  }, [products]);
+  // localStorage'ga yozish
+  useEffect(() => { localStorage.setItem("users", JSON.stringify(users)); }, [users]);
+  useEffect(() => { localStorage.setItem("archive", JSON.stringify(archive)); }, [archive]);
+  useEffect(() => { localStorage.setItem("products", JSON.stringify(products)); }, [products]);
 
   // Qarzdor qo‘shish
   const addUser = (user) => {
-    const newUser = {
-      ...user,
-      id: Date.now(),
-      date: new Date().toISOString().split("T")[0],
-    };
+    const newUser = { ...user, id: Date.now(), date: new Date().toISOString().split("T")[0] };
     setUsers([...users, newUser]);
   };
 
@@ -71,14 +60,20 @@ export default function App() {
     }
   };
 
-  // Mahsulot qo‘shish
+  // Mahsulot qo‘shish / tahrirlash
   const addProduct = (product) => {
     setProducts([...products, { ...product, id: Date.now() }]);
   };
 
-  // Mahsulot tahrirlash
-  const editProduct = (id, updatedData) => {
-    setProducts(products.map((p) => (p.id === id ? { ...p, ...updatedData } : p)));
+  const startEditProduct = (product) => {
+    setEditingProduct(product);
+    setCurrentPage("mahsulot");
+  };
+
+  const saveProduct = (updatedProduct) => {
+    setProducts(products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)));
+    setEditingProduct(null);
+    setCurrentPage("mahsulotlar");
   };
 
   // Mahsulot o‘chirish
@@ -93,25 +88,16 @@ export default function App() {
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         {currentPage === "qarzdorlar" && (
           <>
-            <Typography variant="h4" align="center" gutterBottom>
-              🧾 Qarzlar Ro'yxati
-            </Typography>
+            <Typography variant="h4" align="center" gutterBottom>🧾 Qarzlar Ro'yxati</Typography>
             <UserForm addUser={addUser} />
-            <UserList
-              users={users}
-              editUser={editUser}
-              deleteUser={deleteUser}
-              isArchive={false}
-            />
+            <UserList users={users} editUser={editUser} deleteUser={deleteUser} isArchive={false} />
             <TotalDebt users={users} />
           </>
         )}
 
         {currentPage === "arxiv" && (
           <>
-            <Typography variant="h4" align="center" gutterBottom>
-              📦 Arxiv
-            </Typography>
+            <Typography variant="h4" align="center" gutterBottom>📦 Arxiv</Typography>
             <UserList users={archive} isArchive={true} restoreUser={restoreUser} />
             <TotalDebt users={archive} />
           </>
@@ -120,20 +106,22 @@ export default function App() {
         {currentPage === "mahsulot" && (
           <>
             <Typography variant="h4" align="center" gutterBottom>
-              📦 Mahsulot qo‘shish
+              {editingProduct ? "📦 Mahsulotni tahrirlash" : "📦 Mahsulot qo‘shish"}
             </Typography>
-            <ProductForm addProduct={addProduct} />
+            <ProductForm
+              addProduct={addProduct}
+              editingProduct={editingProduct}
+              saveProduct={saveProduct}
+            />
           </>
         )}
 
         {currentPage === "mahsulotlar" && (
           <>
-            <Typography variant="h4" align="center" gutterBottom>
-              📦 Mahsulotlar ro‘yxati
-            </Typography>
+            <Typography variant="h4" align="center" gutterBottom>📦 Mahsulotlar ro‘yxati</Typography>
             <ProductList
               products={products}
-              editProduct={editProduct}
+              editProduct={startEditProduct}
               deleteProduct={deleteProduct}
             />
           </>

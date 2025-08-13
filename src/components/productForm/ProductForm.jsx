@@ -1,64 +1,66 @@
-import React, { useState } from "react";
-import { TextField, Button, Paper, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { TextField, Button, Box } from "@mui/material";
 
-export default function ProductForm({ addProduct }) {
-  const [form, setForm] = useState({
-    name: "",
-    price: "",
-    quantity: ""
-  });
+export default function ProductForm({ addProduct, editingProduct, saveProduct }) {
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    if (editingProduct) {
+      setName(editingProduct.name);
+      setPrice(editingProduct.price);
+      setQuantity(editingProduct.quantity);
+    } else {
+      setName("");
+      setPrice("");
+      setQuantity("");
+    }
+  }, [editingProduct]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.price || !form.quantity) return;
-
-    addProduct({
-      name: form.name,
-      price: parseFloat(form.price),
-      quantity: parseInt(form.quantity, 10)
-    });
-
-    setForm({ name: "", price: "", quantity: "" });
+    const productData = {
+      id: editingProduct ? editingProduct.id : Date.now(),
+      name,
+      price: Number(price),
+      quantity: Number(quantity),
+    };
+    if (editingProduct) {
+      saveProduct(productData);
+    } else {
+      addProduct(productData);
+    }
+    setName("");
+    setPrice("");
+    setQuantity("");
   };
 
   return (
-    <Paper sx={{ p: 2, mb: 3 }}>
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}
-      >
-        <TextField
-          label="Mahsulot nomi"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          label="Narxi (so'm)"
-          name="price"
-          type="number"
-          value={form.price}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          label="Soni"
-          name="quantity"
-          type="number"
-          value={form.quantity}
-          onChange={handleChange}
-          fullWidth
-        />
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Qo‘shish
-        </Button>
-      </Box>
-    </Paper>
+    <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", gap: 2, flexDirection: "column", mt: 2 }}>
+      <TextField
+        label="Mahsulot nomi"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <TextField
+        label="Narxi"
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        required
+      />
+      <TextField
+        label="Soni"
+        type="number"
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
+        required
+      />
+      <Button type="submit" variant="contained">
+        {editingProduct ? "Saqlash" : "Qo‘shish"}
+      </Button>
+    </Box>
   );
 }
