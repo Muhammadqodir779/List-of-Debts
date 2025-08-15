@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,15 +8,31 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button
+  Button,
+  TextField,
+  Box
 } from "@mui/material";
 
 export default function ProductList({ products, editProduct, deleteProduct }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <TableContainer component={Paper} sx={{ mt: 3 }}>
-      <Typography variant="h6" sx={{ p: 2 }}>
-        Mahsulotlar ro‘yxati
-      </Typography>
+    <TableContainer component={Paper} sx={{ mt: 3, p: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+        <Typography variant="h6">Mahsulotlar ro‘yxati</Typography>
+        <TextField
+          label="Qidirish"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
+
       <Table>
         <TableHead>
           <TableRow>
@@ -29,8 +45,8 @@ export default function ProductList({ products, editProduct, deleteProduct }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.length > 0 ? (
-            products.map((product, index) => (
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product, index) => (
               <TableRow key={product.id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{product.name}</TableCell>

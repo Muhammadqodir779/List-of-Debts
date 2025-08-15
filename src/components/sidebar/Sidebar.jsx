@@ -28,7 +28,7 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
       }}
     >
       <Box display="flex" alignItems="center" justifyContent="space-between" p={1}>
-        {open && <Typography variant="h6">📋 Mening Panelim</Typography>}
+        {open && <Typography variant="h6">📋 Menu</Typography>}
         <IconButton onClick={() => setOpen(!open)}>
           {open ? <Close /> : <Menu />}
         </IconButton>
