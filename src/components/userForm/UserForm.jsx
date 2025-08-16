@@ -16,7 +16,7 @@ export default function UserForm({ addUser }) {
       surname: lastName,
       amount: parseFloat(amount),
       phone,
-      date: new Date().toISOString().split("T")[0],
+      date: new Date().toISOString().split("T")[0]
     });
 
     setFirstName("");
@@ -35,9 +35,7 @@ export default function UserForm({ addUser }) {
         flexDirection: "column",
         gap: 2,
         width: "850px",
-        maxWidth: "100%",
-        mx: "auto",
-        p: 2,
+        maxWidth: "100%"
       }}
     >
       <TextField

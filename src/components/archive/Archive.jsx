@@ -1,36 +1,11 @@
-import React from "react";
-import { Box, Typography, Paper } from "@mui/material";
-import UserList from "./UserList";
+import React from 'react'
 
-export default function Archive({ archivedUsers }) {
+const Archive = () => {
   return (
-    <Paper
-      sx={{
-        mt: 4,
-        p: { xs: 2, sm: 3 },
-        width: "100%",
-        overflowX: "auto", // 📱 kichik ekranlarda scroll chiqadi
-      }}
-      data-aos="fade-up"
-    >
-      <Box
-        sx={{
-          mb: 2,
-          textAlign: { xs: "center", sm: "left" },
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontSize: { xs: "1.1rem", sm: "1.3rem" },
-            fontWeight: "bold",
-          }}
-        >
-          📂 Arxivlangan qarzdorlar
-        </Typography>
-      </Box>
-
-      <UserList users={archivedUsers} isArchive={true} />
-    </Paper>
-  );
+    <div>
+      
+    </div>
+  )
 }
+
+export default Archive

@@ -10,7 +10,7 @@ import {
   Box,
   Paper,
   Typography,
-  TableContainer,
+  TableContainer
 } from "@mui/material";
 import { Edit, Delete, Save, Close } from "@mui/icons-material";
 
@@ -20,7 +20,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
     name: "",
     surname: "",
     phone: "",
-    amount: "",
+    amount: ""
   });
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -30,7 +30,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
       name: user.name,
       surname: user.surname,
       phone: user.phone,
-      amount: user.amount,
+      amount: user.amount
     });
   };
 
@@ -39,7 +39,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
       name: editData.name,
       surname: editData.surname,
       phone: editData.phone,
-      amount: parseFloat(editData.amount),
+      amount: parseFloat(editData.amount)
     });
     setEditId(null);
   };
@@ -53,23 +53,16 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
   return (
     <TableContainer
       component={Paper}
-      sx={{
-        mt: 3,
-        p: { xs: 1, sm: 2 },
-        width: "100%",
-        overflowX: "auto", // 📱 kichik ekranlarda scroll bo‘ladi
-      }}
+      sx={{ mt: 3, p: 2 }}
       data-aos="zoom-in-up"
     >
       {/* Title + Search */}
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", sm: "row" }, // 📱 phone - column
           justifyContent: "space-between",
-          alignItems: { xs: "stretch", sm: "center" },
-          gap: 2,
-          mb: 2,
+          alignItems: "center",
+          mb: 2
         }}
       >
         <Typography variant="h6">Qarzdorlar ro‘yxati</Typography>
@@ -79,11 +72,11 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
           size="small"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ maxWidth: { xs: "100%", sm: "300px" } }}
+          sx={{ maxWidth: "300px" }}
         />
       </Box>
 
-      <Table size="small">
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell>Ism</TableCell>

@@ -1,66 +1,49 @@
 import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { LineChart } from "@mui/x-charts/LineChart";
+import { Typography } from "@mui/material";
 
-export default function SalesStats({ products }) {
-  // 🔹 Mahsulotlar statistikasi
-  const data = products.map((p) => ({
-    name: p.name,
-    total: p.price * p.quantity,
-  }));
+export default function SalesStats({ users, type }) {
+  const groupData = () => {
+    const dataMap = {};
+
+    users.forEach((u) => {
+      const date = new Date(u.date);
+
+      let key;
+      if (type === "kunlik") {
+        key = date.toLocaleDateString("uz-UZ");
+      } else if (type === "oylik") {
+        key = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      } else if (type === "yillik") {
+        key = `${date.getFullYear()}`;
+      }
+
+      if (!dataMap[key]) {
+        dataMap[key] = 0;
+      }
+      dataMap[key] += parseFloat(u.amount || 0);
+    });
+
+    return {
+      labels: Object.keys(dataMap),
+      values: Object.values(dataMap),
+    };
+  };
+
+  const { labels, values } = groupData();
 
   return (
-    <Card
-      sx={{
-        mt: 4,
-        p: { xs: 1, sm: 2 },
-        width: "100%",
-        overflowX: "auto", // 📱 agar grafik katta bo‘lsa scroll chiqadi
-      }}
-      data-aos="fade-up"
-    >
-      <CardContent>
-        <Typography
-          variant="h6"
-          gutterBottom
-          sx={{
-            textAlign: { xs: "center", sm: "left" },
-            fontSize: { xs: "1rem", sm: "1.2rem" },
-            fontWeight: "bold",
-          }}
-        >
-          📊 Mahsulotlar statistikasi
-        </Typography>
-
-        <Box
-          sx={{
-            width: "100%",
-            height: { xs: 250, sm: 350 }, // 📱 telefon kichkina, PC katta grafik
-          }}
-        >
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data}>
-              <XAxis
-                dataKey="name"
-                tick={{ fontSize: 12 }}
-                interval={0}
-                angle={-30}
-                textAnchor="end"
-              />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="total" fill="#1976d2" radius={[5, 5, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </Box>
-      </CardContent>
-    </Card>
+    <div>
+      <Typography variant="h4" align="center" gutterBottom>
+        📈 Sotuv statistikasi ({type})
+      </Typography>
+      <LineChart
+        xAxis={[{ scaleType: "point", data: labels }]}
+        series={[
+          { data: values, label: "Umumiy summa (so‘m)", color: "#1976d2" }
+        ]}
+        height={300}
+      />
+    </div>
   );
 }
