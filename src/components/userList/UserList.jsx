@@ -7,7 +7,10 @@ import {
   TableBody,
   IconButton,
   TextField,
-  Box
+  Box,
+  Paper,
+  Typography,
+  TableContainer,
 } from "@mui/material";
 import { Edit, Delete, Save, Close } from "@mui/icons-material";
 
@@ -17,7 +20,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
     name: "",
     surname: "",
     phone: "",
-    amount: ""
+    amount: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -27,7 +30,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
       name: user.name,
       surname: user.surname,
       phone: user.phone,
-      amount: user.amount
+      amount: user.amount,
     });
   };
 
@@ -36,7 +39,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
       name: editData.name,
       surname: editData.surname,
       phone: editData.phone,
-      amount: parseFloat(editData.amount)
+      amount: parseFloat(editData.amount),
     });
     setEditId(null);
   };
@@ -48,23 +51,39 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
   );
 
   return (
-    <>
-      {/* Qidirish inputi */}
-      <Box sx={{ mb: 2, maxWidth: "850px" }}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        mt: 3,
+        p: { xs: 1, sm: 2 },
+        width: "100%",
+        overflowX: "auto", // 📱 kichik ekranlarda scroll bo‘ladi
+      }}
+      data-aos="zoom-in-up"
+    >
+      {/* Title + Search */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" }, // 📱 phone - column
+          justifyContent: "space-between",
+          alignItems: { xs: "stretch", sm: "center" },
+          gap: 2,
+          mb: 2,
+        }}
+      >
+        <Typography variant="h6">Qarzdorlar ro‘yxati</Typography>
         <TextField
           label="Qidirish"
           variant="outlined"
-          fullWidth
+          size="small"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ height: "50px" }}
-          inputProps={{
-            style: { height: "50px", padding: "0 14px" }
-          }}
+          sx={{ maxWidth: { xs: "100%", sm: "300px" } }}
         />
       </Box>
 
-      <Table>
+      <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>Ism</TableCell>
@@ -76,86 +95,110 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredUsers.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>
-                {editId === user.id ? (
-                  <TextField
-                    value={editData.name}
-                    onChange={(e) =>
-                      setEditData({ ...editData, name: e.target.value })
-                    }
-                  />
-                ) : (
-                  user.name
-                )}
-              </TableCell>
-              <TableCell>
-                {editId === user.id ? (
-                  <TextField
-                    value={editData.surname}
-                    onChange={(e) =>
-                      setEditData({ ...editData, surname: e.target.value })
-                    }
-                  />
-                ) : (
-                  user.surname
-                )}
-              </TableCell>
-              <TableCell>
-                {editId === user.id ? (
-                  <TextField
-                    value={editData.phone}
-                    onChange={(e) =>
-                      setEditData({ ...editData, phone: e.target.value })
-                    }
-                  />
-                ) : (
-                  user.phone
-                )}
-              </TableCell>
-              <TableCell>
-                {editId === user.id ? (
-                  <TextField
-                    type="number"
-                    value={editData.amount}
-                    onChange={(e) =>
-                      setEditData({ ...editData, amount: e.target.value })
-                    }
-                  />
-                ) : (
-                  `${user.amount} so‘m`
-                )}
-              </TableCell>
-              <TableCell>{user.date}</TableCell>
-
-              {!isArchive && (
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
+              <TableRow key={user.id}>
                 <TableCell>
                   {editId === user.id ? (
-                    <>
-                      <IconButton onClick={() => handleSave(user.id)} color="success">
-                        <Save />
-                      </IconButton>
-                      <IconButton onClick={() => setEditId(null)} color="error">
-                        <Close />
-                      </IconButton>
-                    </>
+                    <TextField
+                      value={editData.name}
+                      onChange={(e) =>
+                        setEditData({ ...editData, name: e.target.value })
+                      }
+                      size="small"
+                    />
                   ) : (
-                    <>
-                      <IconButton onClick={() => handleEdit(user)} color="primary">
-                        <Edit />
-                      </IconButton>
-                      <IconButton onClick={() => deleteUser(user.id)} color="error">
-                        <Delete />
-                      </IconButton>
-                    </>
+                    user.name
                   )}
                 </TableCell>
-              )}
+                <TableCell>
+                  {editId === user.id ? (
+                    <TextField
+                      value={editData.surname}
+                      onChange={(e) =>
+                        setEditData({ ...editData, surname: e.target.value })
+                      }
+                      size="small"
+                    />
+                  ) : (
+                    user.surname
+                  )}
+                </TableCell>
+                <TableCell>
+                  {editId === user.id ? (
+                    <TextField
+                      value={editData.phone}
+                      onChange={(e) =>
+                        setEditData({ ...editData, phone: e.target.value })
+                      }
+                      size="small"
+                    />
+                  ) : (
+                    user.phone
+                  )}
+                </TableCell>
+                <TableCell>
+                  {editId === user.id ? (
+                    <TextField
+                      type="number"
+                      value={editData.amount}
+                      onChange={(e) =>
+                        setEditData({ ...editData, amount: e.target.value })
+                      }
+                      size="small"
+                    />
+                  ) : (
+                    `${user.amount ?? 0} so‘m`
+                  )}
+                </TableCell>
+                <TableCell>{user.date}</TableCell>
+
+                {!isArchive && (
+                  <TableCell>
+                    {editId === user.id ? (
+                      <>
+                        <IconButton
+                          onClick={() => handleSave(user.id)}
+                          color="success"
+                        >
+                          <Save />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => setEditId(null)}
+                          color="error"
+                        >
+                          <Close />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <>
+                        <IconButton
+                          onClick={() => handleEdit(user)}
+                          color="primary"
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => deleteUser(user.id)}
+                          color="error"
+                        >
+                          <Delete />
+                        </IconButton>
+                      </>
+                    )}
+                  </TableCell>
+                )}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={isArchive ? 5 : 6} align="center">
+                Qarzdorlar yo‘q
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
-    </>
+    </TableContainer>
   );
 }

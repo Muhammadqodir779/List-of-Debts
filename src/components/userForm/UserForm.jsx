@@ -16,8 +16,8 @@ export default function UserForm({ addUser }) {
       surname: lastName,
       amount: parseFloat(amount),
       phone,
-      date: new Date().toISOString().split("T")[0]
-    });    
+      date: new Date().toISOString().split("T")[0],
+    });
 
     setFirstName("");
     setLastName("");
@@ -35,7 +35,9 @@ export default function UserForm({ addUser }) {
         flexDirection: "column",
         gap: 2,
         width: "850px",
-        maxWidth: "100%"
+        maxWidth: "100%",
+        mx: "auto",
+        p: 2,
       }}
     >
       <TextField
@@ -52,14 +54,14 @@ export default function UserForm({ addUser }) {
         fullWidth
         required
       />
-        <TextField
-          label="Telefon raqam"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="+998901234567"
-          fullWidth
-        />
+      <TextField
+        label="Telefon raqam"
+        type="tel"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="+998901234567"
+        fullWidth
+      />
       <TextField
         label="Qarz summasi"
         type="number"
