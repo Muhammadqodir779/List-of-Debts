@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,26 +12,16 @@ import {
   TextField,
   Box
 } from "@mui/material";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 export default function ProductList({ products, editProduct, deleteProduct }) {
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    AOS.init({ duration: 800, once: true }); // animatsiya sozlamalari
-  }, []);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ mt: 3, p: 2 }}
-      data-aos="flip-right"   // 👈 AOS qo‘shildi
-    >
+    <TableContainer component={Paper} sx={{ mt: 3, p: 2 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Typography variant="h6">Mahsulotlar ro‘yxati</Typography>
         <TextField
