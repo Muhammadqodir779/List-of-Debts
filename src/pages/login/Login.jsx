@@ -51,7 +51,7 @@ function Login({ onLoginSuccess }) {
             align="center"
             gutterBottom
           >
-            🔐 Login
+            Login
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
