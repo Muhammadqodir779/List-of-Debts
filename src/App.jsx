@@ -66,6 +66,11 @@ export default function App() {
     }
   };
 
+  // ❌ Arxivdan butunlay o‘chirish
+  const deleteFromArchive = (id) => {
+    setArchive(archive.filter((u) => u.id !== id));
+  };
+
   // Mahsulot qo‘shish / tahrirlash
   const addProduct = (product) => {
     setProducts([...products, { ...product, id: Date.now() }]);
@@ -99,7 +104,12 @@ export default function App() {
               <>
                 <Typography variant="h4" align="center" gutterBottom>Qarzlar Ro'yxati</Typography>
                 <UserForm addUser={addUser} />
-                <UserList users={users} editUser={editUser} deleteUser={deleteUser} isArchive={false} />
+                <UserList
+                  users={users}
+                  editUser={editUser}
+                  deleteUser={deleteUser}
+                  isArchive={false}
+                />
                 <TotalDebt users={users} />
               </>
             )}
@@ -107,7 +117,12 @@ export default function App() {
             {currentPage === "arxiv" && (
               <>
                 <Typography variant="h4" align="center" gutterBottom>Arxiv</Typography>
-                <UserList users={archive} isArchive={true} restoreUser={restoreUser} />
+                <UserList
+                  users={archive}
+                  isArchive={true}
+                  restoreUser={restoreUser}
+                  deleteUser={deleteFromArchive}
+                />
                 <TotalDebt users={archive} />
               </>
             )}

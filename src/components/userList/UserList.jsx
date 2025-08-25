@@ -29,7 +29,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
   const [searchTerm, setSearchTerm] = useState("");
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // faqat sm va undan kichik
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleEdit = (user) => {
     setEditId(user.id);
@@ -70,7 +70,9 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
           gap: 2
         }}
       >
-        <Typography variant="h6">Qarzdorlar ro‘yxati</Typography>
+        <Typography variant="h6">
+          {isArchive ? "Arxivdagi qarzdorlar" : "Qarzdorlar ro‘yxati"}
+        </Typography>
         <TextField
           label="Qidirish"
           variant="outlined"
@@ -138,16 +140,23 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
                     </Typography>
                     <Typography><b>Sana:</b> {user.date}</Typography>
 
-                    {!isArchive && (
-                      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}>
-                        <IconButton onClick={() => handleEdit(user)} color="primary">
-                          <Edit />
-                        </IconButton>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}>
+                      {isArchive ? (
+                        // 📦 Arxivda faqat o‘chirish
                         <IconButton onClick={() => deleteUser(user.id)} color="error">
                           <Delete />
                         </IconButton>
-                      </Box>
-                    )}
+                      ) : (
+                        <>
+                          <IconButton onClick={() => handleEdit(user)} color="primary">
+                            <Edit />
+                          </IconButton>
+                          <IconButton onClick={() => deleteUser(user.id)} color="error">
+                            <Delete />
+                          </IconButton>
+                        </>
+                      )}
+                    </Box>
                   </>
                 )}
               </CardContent>
@@ -165,7 +174,7 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
                 <TableCell>Telefon</TableCell>
                 <TableCell>Qarz summasi</TableCell>
                 <TableCell>Sana</TableCell>
-                {!isArchive && <TableCell>Amallar</TableCell>}
+                <TableCell>Amallar</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -222,29 +231,32 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
                   </TableCell>
                   <TableCell>{user.date}</TableCell>
 
-                  {!isArchive && (
-                    <TableCell>
-                      {editId === user.id ? (
-                        <>
-                          <IconButton onClick={() => handleSave(user.id)} color="success">
-                            <Save />
-                          </IconButton>
-                          <IconButton onClick={() => setEditId(null)} color="error">
-                            <Close />
-                          </IconButton>
-                        </>
-                      ) : (
-                        <>
-                          <IconButton onClick={() => handleEdit(user)} color="primary">
-                            <Edit />
-                          </IconButton>
-                          <IconButton onClick={() => deleteUser(user.id)} color="error">
-                            <Delete />
-                          </IconButton>
-                        </>
-                      )}
-                    </TableCell>
-                  )}
+                  <TableCell>
+                    {isArchive ? (
+                      // 📦 Arxiv: faqat o‘chirish
+                      <IconButton onClick={() => deleteUser(user.id)} color="error">
+                        <Delete />
+                      </IconButton>
+                    ) : editId === user.id ? (
+                      <>
+                        <IconButton onClick={() => handleSave(user.id)} color="success">
+                          <Save />
+                        </IconButton>
+                        <IconButton onClick={() => setEditId(null)} color="error">
+                          <Close />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <>
+                        <IconButton onClick={() => handleEdit(user)} color="primary">
+                          <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => deleteUser(user.id)} color="error">
+                          <Delete />
+                        </IconButton>
+                      </>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
