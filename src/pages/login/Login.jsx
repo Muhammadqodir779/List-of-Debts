@@ -17,7 +17,7 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (login === "Muhammadqodir" && password === "2010") {
+    if (login === "Avazbek" && password === "1985") {
       toast.success("Muvaffaqiyatli o'tdingiz");
       onLoginSuccess(); // UserList sahifasiga o‘tadi
     } else {
