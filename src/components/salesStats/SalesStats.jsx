@@ -35,7 +35,7 @@ export default function SalesStats({ users, type }) {
   return (
     <div>
       <Typography variant="h4" align="center" gutterBottom>
-        📈 Sotuv statistikasi ({type})
+        Sotuv statistikasi ({type})
       </Typography>
       <LineChart
         xAxis={[{ scaleType: "point", data: labels }]}

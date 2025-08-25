@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Sidebar from "./components/sidebar/Sidebar";
 import UserForm from "./components/userForm/UserForm";
 import UserList from "./components/userList/UserList";
@@ -7,8 +10,11 @@ import ProductForm from "./components/productForm/ProductForm";
 import ProductList from "./components/productList/ProductList";
 import SalesStats from "./components/salesStats/SalesStats";
 import TotalDebt from "./components/totalDebt/TotalDebt";
+import Login from "./pages/login/Login";
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [users, setUsers] = useState([]);
   const [archive, setArchive] = useState([]);
   const [products, setProducts] = useState([]);
@@ -82,55 +88,62 @@ export default function App() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+    <>
+      <ToastContainer />
+      {isLoggedIn ? (
+        <div style={{ display: "flex" }}>
+          <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-        {currentPage === "qarzdorlar" && (
-          <>
-            <Typography variant="h4" align="center" gutterBottom>🧾 Qarzlar Ro'yxati</Typography>
-            <UserForm addUser={addUser} />
-            <UserList users={users} editUser={editUser} deleteUser={deleteUser} isArchive={false} />
-            <TotalDebt users={users} />
-          </>
-        )}
+          <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+            {currentPage === "qarzdorlar" && (
+              <>
+                <Typography variant="h4" align="center" gutterBottom>Qarzlar Ro'yxati</Typography>
+                <UserForm addUser={addUser} />
+                <UserList users={users} editUser={editUser} deleteUser={deleteUser} isArchive={false} />
+                <TotalDebt users={users} />
+              </>
+            )}
 
-        {currentPage === "arxiv" && (
-          <>
-            <Typography variant="h4" align="center" gutterBottom>📦 Arxiv</Typography>
-            <UserList users={archive} isArchive={true} restoreUser={restoreUser} />
-            <TotalDebt users={archive} />
-          </>
-        )}
+            {currentPage === "arxiv" && (
+              <>
+                <Typography variant="h4" align="center" gutterBottom>Arxiv</Typography>
+                <UserList users={archive} isArchive={true} restoreUser={restoreUser} />
+                <TotalDebt users={archive} />
+              </>
+            )}
 
-        {currentPage === "mahsulot" && (
-          <>
-            <Typography variant="h4" align="center" gutterBottom>
-              {editingProduct ? "📦 Mahsulotni tahrirlash" : "📦 Mahsulot qo‘shish"}
-            </Typography>
-            <ProductForm
-              addProduct={addProduct}
-              editingProduct={editingProduct}
-              saveProduct={saveProduct}
-            />
-          </>
-        )}
+            {currentPage === "mahsulot" && (
+              <>
+                <Typography variant="h4" align="center" gutterBottom>
+                  {editingProduct ? "Mahsulotni tahrirlash" : "Mahsulot qo‘shish"}
+                </Typography>
+                <ProductForm
+                  addProduct={addProduct}
+                  editingProduct={editingProduct}
+                  saveProduct={saveProduct}
+                />
+              </>
+            )}
 
-        {currentPage === "mahsulotlar" && (
-          <>
-            <Typography variant="h4" align="center" gutterBottom>📦 Mahsulotlar ro‘yxati</Typography>
-            <ProductList
-              products={products}
-              editProduct={startEditProduct}
-              deleteProduct={deleteProduct}
-            />
-          </>
-        )}
+            {currentPage === "mahsulotlar" && (
+              <>
+                <Typography variant="h4" align="center" gutterBottom>Mahsulotlar ro‘yxati</Typography>
+                <ProductList
+                  products={products}
+                  editProduct={startEditProduct}
+                  deleteProduct={deleteProduct}
+                />
+              </>
+            )}
 
-        {["kunlik", "oylik", "yillik"].includes(currentPage) && (
-          <SalesStats users={users} type={currentPage} />
-        )}
-      </Container>
-    </div>
+            {["kunlik", "oylik", "yillik"].includes(currentPage) && (
+              <SalesStats users={users} type={currentPage} />
+            )}
+          </Container>
+        </div>
+      ) : (
+        <Login onLoginSuccess={() => setIsLoggedIn(true)} />
+      )}
+    </>
   );
 }
