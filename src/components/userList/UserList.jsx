@@ -20,12 +20,7 @@ import { useTheme } from "@mui/material/styles";
 
 export default function UserList({ users, editUser, deleteUser, isArchive = false }) {
   const [editId, setEditId] = useState(null);
-  const [editData, setEditData] = useState({
-    name: "",
-    surname: "",
-    phone: "",
-    amount: ""
-  });
+  const [editAmount, setEditAmount] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const theme = useTheme();
@@ -33,21 +28,11 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
 
   const handleEdit = (user) => {
     setEditId(user.id);
-    setEditData({
-      name: user.name,
-      surname: user.surname,
-      phone: user.phone,
-      amount: user.amount
-    });
+    setEditAmount(user.amount);
   };
 
   const handleSave = (id) => {
-    editUser(id, {
-      name: editData.name,
-      surname: editData.surname,
-      phone: editData.phone,
-      amount: parseFloat(editData.amount)
-    });
+    editUser(id, { amount: parseFloat(editAmount) });
     setEditId(null);
   };
 
@@ -90,35 +75,19 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
           {filteredUsers.map((user) => (
             <Card key={user.id} sx={{ p: 1 }}>
               <CardContent>
+                <Typography><b>Ism:</b> {user.name}</Typography>
+                <Typography><b>Familiya:</b> {user.surname}</Typography>
+                <Typography><b>Telefon:</b> {user.phone}</Typography>
+                <Typography><b>Sana:</b> {user.date}</Typography>
+
                 {editId === user.id ? (
                   <>
                     <TextField
                       fullWidth
-                      label="Ism"
-                      value={editData.name}
-                      onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                      sx={{ mb: 1 }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Familiya"
-                      value={editData.surname}
-                      onChange={(e) => setEditData({ ...editData, surname: e.target.value })}
-                      sx={{ mb: 1 }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Telefon"
-                      value={editData.phone}
-                      onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
-                      sx={{ mb: 1 }}
-                    />
-                    <TextField
-                      fullWidth
                       type="number"
                       label="Qarz summasi"
-                      value={editData.amount}
-                      onChange={(e) => setEditData({ ...editData, amount: e.target.value })}
+                      value={editAmount}
+                      onChange={(e) => setEditAmount(e.target.value)}
                       sx={{ mb: 1 }}
                     />
                     <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
@@ -132,17 +101,12 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
                   </>
                 ) : (
                   <>
-                    <Typography><b>Ism:</b> {user.name}</Typography>
-                    <Typography><b>Familiya:</b> {user.surname}</Typography>
-                    <Typography><b>Telefon:</b> {user.phone}</Typography>
                     <Typography>
-                      <b>Qarz summasi:</b> {user.amount != null ? `${user.amount} so‘m` : "-"}
+                      <b>Qarz summasi:</b>{" "}
+                      {user.amount != null ? `${user.amount} so‘m` : "-"}
                     </Typography>
-                    <Typography><b>Sana:</b> {user.date}</Typography>
-
                     <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}>
                       {isArchive ? (
-                        // 📦 Arxivda faqat o‘chirish
                         <IconButton onClick={() => deleteUser(user.id)} color="error">
                           <Delete />
                         </IconButton>
@@ -180,50 +144,15 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
             <TableBody>
               {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell>
-                    {editId === user.id ? (
-                      <TextField
-                        value={editData.name}
-                        onChange={(e) =>
-                          setEditData({ ...editData, name: e.target.value })
-                        }
-                      />
-                    ) : (
-                      user.name
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editId === user.id ? (
-                      <TextField
-                        value={editData.surname}
-                        onChange={(e) =>
-                          setEditData({ ...editData, surname: e.target.value })
-                        }
-                      />
-                    ) : (
-                      user.surname
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editId === user.id ? (
-                      <TextField
-                        value={editData.phone}
-                        onChange={(e) =>
-                          setEditData({ ...editData, phone: e.target.value })
-                        }
-                      />
-                    ) : (
-                      user.phone
-                    )}
-                  </TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.surname}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
                   <TableCell>
                     {editId === user.id ? (
                       <TextField
                         type="number"
-                        value={editData.amount}
-                        onChange={(e) =>
-                          setEditData({ ...editData, amount: e.target.value })
-                        }
+                        value={editAmount}
+                        onChange={(e) => setEditAmount(e.target.value)}
                       />
                     ) : (
                       user.amount != null ? `${user.amount} so‘m` : "-"
@@ -233,7 +162,6 @@ export default function UserList({ users, editUser, deleteUser, isArchive = fals
 
                   <TableCell>
                     {isArchive ? (
-                      // 📦 Arxiv: faqat o‘chirish
                       <IconButton onClick={() => deleteUser(user.id)} color="error">
                         <Delete />
                       </IconButton>
