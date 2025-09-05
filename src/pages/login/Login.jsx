@@ -18,10 +18,10 @@ function Login({ onLoginSuccess }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (login === "Avazbek" && password === "1985") {
-      toast.success("Muvaffaqiyatli o'tdingiz");
+      toast.success("Muvaffaqiyatli o'tdingiz", { autoClose: 2000 });
       onLoginSuccess(); // UserList sahifasiga o‘tadi
     } else {
-      toast.error("Qaytadan urinib ko‘ring");
+      toast.error("Qaytadan urinib ko‘ring", { autoClose: 2000 });
     }
   };
 
